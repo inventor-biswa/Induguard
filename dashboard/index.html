@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>InduGuard — Industrial Safety Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+  <!-- Socket.IO client (CDN) -->
+  <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <!-- Animated background particles -->
+  <div class="bg-grid"></div>
+
+  <!-- ===== HEADER ===== -->
+  <header>
+    <div class="header-left">
+      <div class="logo">
+        <span class="logo-icon">⚙️</span>
+        <div>
+          <h1>InduGuard</h1>
+          <p class="subtitle">BJB Autonomous College · Dept: IMSc</p>
+        </div>
+      </div>
+    </div>
+    <div class="header-right">
+      <div class="status-pill" id="mqttStatus">
+        <span class="dot"></span>
+        <span id="mqttStatusText">Connecting…</span>
+      </div>
+      <div class="clock" id="clock">--:--:--</div>
+    </div>
+  </header>
+
+  <!-- ===== ALERT BANNER ===== -->
+  <div class="alert-banner" id="alertBanner">
+    <span class="alert-icon">⚠️</span>
+    <span id="alertText">ALERT ACTIVE</span>
+  </div>
+
+  <!-- ===== MAIN GRID ===== -->
+  <main>
+    <!-- Row 1: Sensor Cards -->
+    <div class="cards-grid">
+
+      <!-- Flame -->
+      <div class="card" id="card-flame">
+        <div class="card-icon">🔥</div>
+        <div class="card-body">
+          <div class="card-label">FLAME SENSOR</div>
+          <div class="card-value" id="val-flame">—</div>
+          <div class="card-badge" id="badge-flame">WAITING</div>
+        </div>
+        <div class="card-ring" id="ring-flame"></div>
+      </div>
+
+      <!-- Smoke -->
+      <div class="card" id="card-smoke">
+        <div class="card-icon">💨</div>
+        <div class="card-body">
+          <div class="card-label">SMOKE SENSOR</div>
+          <div class="card-value" id="val-smoke">—</div>
+          <div class="card-badge" id="badge-smoke">WAITING</div>
+        </div>
+        <div class="card-ring" id="ring-smoke"></div>
+      </div>
+
+      <!-- Vibration -->
+      <div class="card" id="card-vibration">
+        <div class="card-icon">📳</div>
+        <div class="card-body">
+          <div class="card-label">VIBRATION</div>
+          <div class="card-value" id="val-vibration">—</div>
+          <div class="card-badge" id="badge-vibration">WAITING</div>
+        </div>
+        <div class="card-ring" id="ring-vibration"></div>
+      </div>
+
+      <!-- Temperature -->
+      <div class="card" id="card-temp">
+        <div class="card-icon">🌡️</div>
+        <div class="card-body">
+          <div class="card-label">TEMPERATURE</div>
+          <div class="card-value" id="val-temp">—</div>
+          <div class="card-badge ok" id="badge-temp">°C</div>
+        </div>
+        <div class="card-ring ok" id="ring-temp"></div>
+      </div>
+
+      <!-- Humidity -->
+      <div class="card" id="card-humidity">
+        <div class="card-icon">💧</div>
+        <div class="card-body">
+          <div class="card-label">HUMIDITY</div>
+          <div class="card-value" id="val-humidity">—</div>
+          <div class="card-badge ok" id="badge-humidity">%RH</div>
+        </div>
+        <div class="card-ring ok" id="ring-humidity"></div>
+      </div>
+
+    </div>
+
+    <!-- Row 2: Charts + Log -->
+    <div class="bottom-grid">
+
+      <!-- Temperature Chart -->
+      <div class="panel">
+        <div class="panel-header">
+          <span>🌡️ Temperature History</span>
+          <span class="panel-tag">Live</span>
+        </div>
+        <canvas id="tempChart"></canvas>
+      </div>
+
+      <!-- Humidity Chart -->
+      <div class="panel">
+        <div class="panel-header">
+          <span>💧 Humidity History</span>
+          <span class="panel-tag">Live</span>
+        </div>
+        <canvas id="humChart"></canvas>
+      </div>
+
+      <!-- Event Log -->
+      <div class="panel log-panel">
+        <div class="panel-header">
+          <span>📋 Event Log</span>
+          <button class="clear-btn" onclick="clearLog()">Clear</button>
+        </div>
+        <div class="log-scroll" id="logScroll">
+          <div class="log-entry info">System initialized. Waiting for MQTT data…</div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- ===== FOOTER ===== -->
+  <footer>
+    <span>InduGuard v1.0 — Final Year BSc Project — BJB Autonomous College</span>
+    <span>Topic: <code>indigurd</code> | Broker: <code>98.130.28.156</code></span>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
